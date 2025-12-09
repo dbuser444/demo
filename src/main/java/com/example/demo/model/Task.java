@@ -1,29 +1,49 @@
-package com.example.demo.service;
+package com.example.demo.model;
 
-import jakarta.annotation.Priority;
+import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
+@Entity
+@Table(name = "task")
 public class Task {
-    private int id;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
     private String title;
+
+    @Enumerated(EnumType.STRING)
     private Priority priority;
-    private boolean completed;
+
+    private Boolean completed = false;
+
+    @CreationTimestamp
+    @Column(updatable = false)
     private LocalDateTime createdAt;
 
-    public Task() {}
 
-    public Task(int id, String title, Priority priority) {
-        this.id = id;
+    public Task() {
+    }
+
+    public Task(String title, Priority priority) {
         this.title = title;
         this.priority = priority;
-        this.completed = false;
-        this.createdAt = LocalDateTime.now();
     }
-    public int getId() {
+
+
+    public enum Priority {
+        HIGH, MEDIUM, LOW
+    }
+
+    // --- Геттеры и Сеттеры ---
+
+    public Integer getId() {
         return id;
     }
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
     public String getTitle() {
@@ -38,23 +58,13 @@ public class Task {
     public void setPriority(Priority priority) {
         this.priority = priority;
     }
-    public boolean isCompleted() {
+    public Boolean getCompleted() {
         return completed;
     }
-    public void setCompleted(boolean completed) {
+    public void setCompleted(Boolean completed) {
         this.completed = completed;
     }
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
 }
-
-public enum Priority {
-    HIGH,   // Высокий приоритет
-    MEDIUM, // Средний приоритет
-    LOW     // Низкий приоритет
-}
-
