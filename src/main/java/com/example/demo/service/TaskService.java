@@ -1,66 +1,60 @@
 package com.example.demo.service;
 
 import com.example.demo.model.Task;
-import org.springframework.stereotype.Service;
 import com.example.demo.repository.TaskRepository;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-
 
 @Service
 public class TaskService {
 
-    private TaskRepository taskRepository;
+    private final TaskRepository taskRepository;
 
     public TaskService(TaskRepository taskRepository) {
         this.taskRepository = taskRepository;
     }
 
-    // вывод всех задач
-    public List<Task> AllTitle() {
-        return taskRepository.findAll() ;
-    }
-
-    // добавление
-    public Task AddTitle(Task newTask) {
-        return taskRepository.save(newTask);
-    }
-
-    //вывод по id
-    public Task GetTitle(int id) {
-        return taskRepository.findById(id).orElse(null);
-    }
-
-    // удаление по Id
-    public boolean DeleteTitle(int id) {
-        if (taskRepository.existsById(id)) {
-            taskRepository.deleteById(id);
-            return true;
+    // Создает новую задачу, привязывая ее к текущему пользователю.
+    public Task addTask(Task task, String username) {
+        task.setUsername(username);
+        if (task.getCompleted() == null) {
+            task.setCompleted(false);
         }
-        return false;
+        return taskRepository.save(task);
     }
 
-    // поменять статус
-    public Task completeTask(int id) {
-        Task task = GetTitle(id);
+    // Получает все задачи, принадлежащие конкретному пользователю.
+    public List<Task> getAllTasks(String username) {
+        return taskRepository.findByUsername(username);
+    }
 
-        if(task != null) {
+    // Получает одну задачу по ID, только если она принадлежит текущему пользователю.
+    public Task getTaskById(int id, String username) {
+        return taskRepository.findByIdAndUsername(id, username).orElse(null);
+    }
+
+    // Обновляет статус задачи на "выполнено", только если она принадлежит текущему пользователю.
+    @Transactional
+    public Task completeTask(int id, String username) {
+        Task task = taskRepository.findByIdAndUsername(id, username).orElse(null);
+
+        if (task != null) {
             task.setCompleted(true);
             return taskRepository.save(task);
         }
         return null;
     }
+
+    // Удаляет задачу по ID, только если она принадлежит текущему пользователю.
+    public boolean deleteTask(int id, String username) {
+        Task task = taskRepository.findByIdAndUsername(id, username).orElse(null);
+
+        if (task != null) {
+            taskRepository.delete(task);
+            return true;
+        }
+        return false;
+    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

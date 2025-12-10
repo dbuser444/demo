@@ -18,6 +18,9 @@ public class Task {
     @Enumerated(EnumType.STRING)
     private Priority priority;
 
+    // Связь задачи с пользователем
+    private String username;
+
     private Boolean completed = false;
 
     @CreationTimestamp
@@ -28,9 +31,10 @@ public class Task {
     public Task() {
     }
 
-    public Task(String title, Priority priority) {
+    public Task(String title, Priority priority, String username) {
         this.title = title;
         this.priority = priority;
+        this.username = username;
     }
 
 
@@ -38,33 +42,50 @@ public class Task {
         HIGH, MEDIUM, LOW
     }
 
-    // --- Геттеры и Сеттеры ---
+    //  Геттеры и Сеттеры
 
     public Integer getId() {
         return id;
     }
+
     public void setId(Integer id) {
         this.id = id;
     }
+
     public String getTitle() {
         return title;
     }
+
     public void setTitle(String title) {
         this.title = title;
     }
+
     public Priority getPriority() {
         return priority;
     }
+
     public void setPriority(Priority priority) {
         this.priority = priority;
     }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     public Boolean getCompleted() {
         return completed;
     }
+
     public void setCompleted(Boolean completed) {
         this.completed = completed;
     }
+
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
+
 }
