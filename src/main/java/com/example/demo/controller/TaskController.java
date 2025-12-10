@@ -26,7 +26,6 @@ public class TaskController {
     @PostMapping
     public ResponseEntity<Task> addTask(@RequestBody Task task){
         String username = getCurrentUsername();
-        // Используем camelCase для метода сервиса и передаем username
         Task createdTask = taskService.addTask(task, username);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdTask);
     }
